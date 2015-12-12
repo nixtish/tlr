@@ -1,0 +1,67 @@
+- name: Install system packages 
+  action: apt update_cache=yes name={{ item }}
+  with_items:
+    - git
+    - zsh
+    - silversearcher-ag
+    - dstat 
+    - htop 
+    - tar
+    - unzip 
+    - software-properties-common
+  when: "{{ core_system }} == 1"
+  tags:
+    - system
+    - core-utils
+    - config   
+
+- name: Install core Python packages 
+  action: apt update_cache=yes name={{ item }}
+  with_items:  
+    - gcc
+    - python-pip
+    - python-setuptools
+    - python-dev
+  when: "{{ core_python }} == 1"
+  tags:
+    - python
+    - core-utils
+    - config
+
+- name: install core pip installs 
+  pip: name={{ item }}
+  with_items:
+    - requests
+    - Flask
+    - pandas
+    - numpy
+    - ipython 
+    - virtualenv    
+    - pep8
+    - autopep8
+    - tldextract
+  when: "{{ core_python }} == 1"
+  tags:
+    - python
+    - core-utils
+    - config
+
+- name: Add Maven Repository
+  apt_repository: repo='ppa:andrei-pozolotin/maven3'
+  when: "{{ core_java }} == 1"
+  tags:
+    - java
+    - core-utils
+    - config
+
+- name: install core Java packages
+  action: apt update_cache=yes name={{ item }}
+  with_items:  
+    - maven3
+  when: "{{ core_java }} == 1"
+  tags:
+    - java
+    - core-utils
+    - config
+
+

@@ -1,0 +1,12 @@
+[tlr-command]
+command.tlr.io 
+
+[tlr-es]
+es-1.tlr.io 
+es-2.tlr.io 
+
+[tlr-pg]
+pg-1.tlr.io 
+
+[tlr-mysql]
+mysql-1.tlr.io

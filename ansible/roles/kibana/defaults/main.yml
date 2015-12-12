@@ -1,0 +1,7 @@
+---
+kibana_version: kibana-4.2.0
+kibana_port: 5601
+kibana_host: localhost
+kibana_install_directory: /mnt/kibana
+elasticsearch_host: http://elastic.tlr.com:9200
+

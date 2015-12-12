@@ -1,0 +1,119 @@
+---
+
+- name: Make sure the group for the nginx user exists
+  group: name={{ nginx.nginx_user }} state=present
+
+- name: Make sure the nginx user exists
+  user: name={{ nginx.nginx_user }} group={{ nginx.nginx_group }} state=present
+
+- name: make kibana directory
+  file: path={{ kibana_install_directory }} state=directory owner={{ nginx.nginx_user }} group={{ nginx.nginx_group }} recurse=yes
+  tags:  
+    - software
+    - kibana
+    - install 
+
+- name: download kibana 
+  get_url: url=https://download.elastic.co/kibana/kibana/{{ kibana_version }}-linux-x64.tar.gz dest=/tmp/{{ kibana_version }}-linux-x64.tar.gz
+  tags:
+    - software
+    - kibana
+    - install 
+
+- name: Extract kibana tar
+  unarchive:
+    src: "/tmp/{{ kibana_version }}-linux-x64.tar.gz"
+    dest: "/opt"
+    copy: no  
+  tags:
+    - software
+    - kibana
+    - install 
+
+- name: move kibana contents to kibana_install_directory
+  shell: cp -R /opt/kibana-4*/* {{ kibana_install_directory }}
+  tags:
+    - software
+    - kibana
+    - install 
+
+- name: remove kibana installation files   
+  shell: rm -R /opt/kibana-4*  
+  tags:
+    - software
+    - kibana
+    - install 
+
+- name: override kibana.yml file
+  template: src=kibana.yml.j2 dest={{ kibana_install_directory }}/config/kibana.yml
+  tags:
+    - software
+    - kibana
+    - install 
+
+# NGinx
+
+- name: Copy nginx configuration for kibana
+  template: src=kibana.nginx.conf.j2 dest=/etc/nginx/sites-available/kibana.conf owner={{ nginx.nginx_user }} group={{ nginx.nginx_group }}
+  tags:
+    - software
+    - kibana
+    - install   
+
+- name: Link nginx configuration for kibana
+  file: src=/etc/nginx/sites-available/kibana.conf dest=/etc/nginx/sites-enabled/kibana.conf state=link owner={{ nginx.nginx_user }} group={{ nginx.nginx_group }}
+  notify:
+    - restart nginx
+  tags:
+    - software
+    - kibana
+    - install   
+
+# Kibana as a service
+
+- name: add kibana as a service shell script 
+  template: src=kibana.sh.j2 dest=/etc/init.d/kibana 
+  tags:
+    - software
+    - kibana
+    - install 
+
+- name: make kibana as a service shell script executable 
+  shell: chmod +x /etc/init.d/kibana
+  tags:
+    - software
+    - kibana
+    - install   
+
+- name: run kibana on startup
+  shell: update-rc.d kibana defaults 96 9
+  tags:
+    - software
+    - kibana
+    - install   
+
+# Add Marvel plugin 
+- name: install marvel 
+  shell: /mnt/kibana/bin/kibana plugin --install  elasticsearch/marvel/latest
+  ignore_errors: True
+  tags:
+    - software
+    - kibana
+    - install    
+
+# Add Sense plugin 
+- name: install sense 
+  shell: /mnt/kibana/bin/kibana plugin --install elastic/sense
+  ignore_errors: True   
+  tags:
+    - software
+    - kibana
+    - install 
+
+# Restart Kibana  
+- name: restart kibana
+  service: name=kibana enabled=yes state=restarted
+  tags:
+    - software
+    - kibana
+    - install 

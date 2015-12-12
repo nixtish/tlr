@@ -1,0 +1,16 @@
+---
+elasticsearch_user: "elasticsearch"
+elasticsearch_group: "elasticsearch"
+elasticsearch_cluster_name: "tlr"
+elasticsearch_cluster_domain: "elastic.tlr.io"
+elasticsearch_tcp_port: "9300"
+elasticsearch_http_port: "9200"
+elasticsearch_cors_enable: "true"
+elasticsearch_cors_allow_origin: "*"
+elasticsearch_conf_directory: "/etc/elasticsearch"
+elasticsearch_data_directory: "/mnt/elasticsearch/data"
+elasticsearch_tmp_directory: "/mnt/elasticsearch/tmp"
+elasticsearch_log_directory: "/var/log/elasticsearch"
+elasticsearch_plugin_directory: "/usr/share/elasticsearch/plugins"
+elasticsearch_debian_repo: "deb http://packages.elastic.co/elasticsearch/2.x/debian stable main"
+es_bulk_queue_size: 1000

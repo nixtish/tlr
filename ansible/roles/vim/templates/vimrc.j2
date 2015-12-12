@@ -1,0 +1,136 @@
+" {{ ansible_managed }}
+
+filetype plugin indent on
+set nocompatible
+set encoding=utf-8
+syntax enable
+set t_Co=256
+
+" set the runtime path to include Vundle and initialize
+set rtp+=~/.vim/bundle/vundle/
+call vundle#rc()
+
+" let Vundle manage Vundle, required
+Plugin 'gmarik/Vundle.vim'
+
+Plugin 'terryma/vim-multiple-cursors'
+Plugin 'bling/vim-airline'
+Plugin 'tpope/vim-fugitive'
+
+Plugin 'tpope/vim-fireplace'
+Plugin 'guns/vim-clojure-static'
+
+Plugin 'mattn/webapi-vim'
+Plugin 'mattn/gist-vim'
+
+" https://github.com/scrooloose/nerdtree
+Plugin 'scrooloose/nerdtree'
+Plugin 'Xuyuanp/nerdtree-git-plugin'
+
+Plugin 'jmcantrell/vim-virtualenv'
+Plugin 'jpalardy/vim-slime'
+
+Plugin 'scrooloose/syntastic'
+
+Plugin 'elzr/vim-json'
+Plugin 'tpope/vim-surround'
+" https://github.com/airblade/vim-gitgutter
+Plugin 'airblade/vim-gitgutter'
+
+Plugin 'markcornick/vim-terraform'
+Plugin 'rizzatti/dash.vim'
+Plugin 'derekwyatt/vim-scala'
+
+
+call vundle#end()
+
+""""""""""""""""""""""""""""""
+" nerdtree https://github.com/scrooloose/nerdtree
+""""""""""""""""""""""""""""""
+autocmd StdinReadPre * let s:std_in=0
+autocmd VimEnter * if argc() == -1 && !exists("s:std_in") | NERDTree | endif
+
+""""""""""""""""""""""""""""""
+" gistvim https://github.com/mattn/gist-vim
+""""""""""""""""""""""""""""""
+let g:gist_clip_command = 'pbcopy'
+let g:gist_detect_filetype = 1
+let g:gist_open_browser_after_post = 1
+let g:gist_show_privates = 1
+
+""""""""""""""""""""""""""""""
+" syntastic https://github.com/scrooloose/syntastic
+""""""""""""""""""""""""""""""
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 1
+let g:syntastic_loc_list_height=5
+
+
+""""""""""""""""""""""""""""""
+" airline http://jchain.github.io/blog/2013/07/17/fly-with-vim-airline
+" https://github.com/bling/vim-airline/blob/master/doc/airline.txt#L298
+""""""""""""""""""""""""""""""
+let g:airline#extensions#bufferline#enabled = 1
+let g:airline#extensions#syntastic#enabled = 1
+let g:airline#extensions#tabline#enabled = 1
+let g:airline_theme = 'papercolor'
+let g:airline_powerline_fonts = 1
+set laststatus=2
+
+""""""""""""""""""""""""""""""
+" multiple cursors  https://github.com/terryma/vim-multiple-cursors
+""""""""""""""""""""""""""""""
+let g:multi_cursor_next_key='<C-n>'
+let g:multi_cursor_prev_key='<C-p>'
+let g:multi_cursor_skip_key='<C-x>'
+let g:multi_cursor_quit_key='<Esc>'
+
+
+"""
+" http://sheerun.net/2014/03/21/how-to-boost-your-vim-productivity/
+"""
+let mapleader = "\<Space>"
+nmap <Leader><Leader> V
+nnoremap <Leader>w :w<CR>
+
+
+
+""""""""""""""""""""""""""""""
+" overall  http://dougblack.io/words/a-good-vimrc.html
+" python http://docs.python-guide.org/en/latest/dev/env/
+""""""""""""""""""""""""""""""
+set textwidth=79  " lines longer than 79 columns will be broken
+set shiftwidth=4  " operation >> indents 4 columns; << unindents 4 columns
+set tabstop=4     " a hard TAB displays as 4 columns
+set expandtab     " insert spaces when hitting TABs
+set softtabstop=4 " insert/delete 4 spaces when hitting a TAB/BACKSPACE
+set shiftround    " round indent to multiple of 'shiftwidth'
+set autoindent    " align the new line indent with the previous line
+
+set number
+set linebreak
+set showbreak=+++
+
+set showmatch
+set incsearch
+set hlsearch
+set smartcase
+set ignorecase
+
+set undolevels=1000
+set backspace=indent,eol,start
+set lazyredraw
+set linespace=0
+
+""""""""""""""""""""""""""""""
+" vim slime / python https://github.com/jpalardy/vim-slime
+" http://stackoverflow.com/questions/26116389/how-to-send-code-to-ipython-from-vim
+""""""""""""""""""""""""""""""
+let g:slime_target = "tmux"
+let g:slime_python_ipython = 1
+let g:slime_default_config = {"socket_name": "default", "target_pane": "1"}

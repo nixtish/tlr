@@ -1,0 +1,22 @@
+---
+
+- name: install oh-my-zsh
+  shell: curl -L http://install.ohmyz.sh | sh creates=~/.oh-my-zsh
+  tags:
+    - system
+    - oh-my-zsh
+    - install
+
+- name: overdride zshrc
+  template: src=zshrc.j2 dest=~/.zshrc owner=root group=root backup=yes mode=0644
+  tags:
+    - system
+    - oh-my-zsh
+    - config
+
+- name: Settings default shell
+  user: name=root shell=/bin/zsh
+  tags:
+    - system
+    - oh-my-zsh
+    - config

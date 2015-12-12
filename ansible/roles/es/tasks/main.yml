@@ -1,0 +1,169 @@
+---
+- name: elasticsearch check
+  ignore_errors: yes
+  register: elasticsearch_check
+  command: dpkg-query -l 'elasticsearch'
+  tags:
+    - software
+    - es
+    - install  
+
+- name: install elasticsearch apt keys
+  apt_key:
+    url: https://packages.elastic.co/GPG-KEY-elasticsearch
+  when: elasticsearch_check.stderr.find('no packages found') != -1
+  tags:
+    - software
+    - es
+    - install  
+
+- name: install elasticsearch apt repos
+  apt_repository:
+    repo: "{{ elasticsearch_debian_repo }}"
+  when: elasticsearch_check.stderr.find('no packages found') != -1
+  tags:
+    - software
+    - es
+    - install  
+
+- name: apt-get update
+  apt: update_cache=yes
+  when: elasticsearch_check.stderr.find('no packages found') != -1
+  tags:
+    - software
+    - es
+    - install  
+
+- name: install elasticsearch
+  apt: pkg=elasticsearch update_cache=yes state=present
+  tags:
+    - software
+    - es
+    - install  
+
+
+- name: make elasticsearch conf directory
+  file: path={{ elasticsearch_conf_directory }} state=directory owner={{ elasticsearch_user }} group={{ elasticsearch_group }} recurse=yes
+  tags:
+    - software
+    - es
+    - install 
+
+- name: make elasticsearch data directory
+  file: path={{ elasticsearch_data_directory }} state=directory owner={{ elasticsearch_user }} group={{ elasticsearch_group }} recurse=yes
+  tags:
+    - software
+    - es
+    - install   
+
+- name: make elasticsearch tmp directory
+  file: path={{ elasticsearch_tmp_directory }} state=directory owner={{ elasticsearch_user }} group={{ elasticsearch_group }} recurse=yes
+  tags:
+    - software
+    - es
+    - install   
+
+- name: make elasticsearch log directory
+  file: path={{ elasticsearch_log_directory }} state=directory owner={{ elasticsearch_user }} group={{ elasticsearch_group }} recurse=yes
+  tags:
+    - software
+    - es
+    - install    
+
+- name: override elasticsearch.yml file
+  template: src=elasticsearch.yml.j2 dest={{ elasticsearch_conf_directory }}/elasticsearch.yml
+  tags:
+    - software
+    - es
+    - config  
+
+- name: override /etc/default/elasticsearch file
+  template: src=elasticsearch.default.j2 dest=/etc/default/elasticsearch owner={{ elasticsearch_user }} group={{ elasticsearch_group }} mode=0644
+  tags:
+    - software
+    - es
+    - config  
+
+- name: start elasticsearch at boot
+  command: update-rc.d elasticsearch defaults 95 10
+  tags:
+    - software
+    - es
+    - config  
+
+- name: check elasticsearch license plugin
+  shell: /usr/share/elasticsearch/bin/plugin list|grep license
+  ignore_errors: yes
+  register: elasticsearch_plugin_license
+  tags:
+    - software
+    - es
+    - config  
+
+- name: install elasticsearch license plugin
+  command: /usr/share/elasticsearch/bin/plugin install license
+  when: elasticsearch_plugin_license.rc == 1
+  tags:
+    - software
+    - es
+    - install    
+
+- name: check elasticsearch marvel-agent plugin
+  shell: /usr/share/elasticsearch/bin/plugin list|grep marvel-agent
+  ignore_errors: yes
+  register: elasticsearch_plugin_marvel_agent
+  tags:
+    - software
+    - es
+    - install  
+
+- name: install elasticsearch marvel-agent plugin
+  command: /usr/share/elasticsearch/bin/plugin install marvel-agent
+  when: elasticsearch_plugin_marvel_agent.rc == 1
+  tags:
+    - software
+    - es
+    - install  
+
+- name: check analysis-icu plugin
+  shell: /usr/share/elasticsearch/bin/plugin list|grep icu
+  ignore_errors: yes
+  register: elasticsearch_plugin_analysis_icu
+  tags:
+    - software
+    - es
+    - install
+
+- name: install analysis-icu plugin
+  command: /usr/share/elasticsearch/bin/plugin install analysis-icu
+  when: elasticsearch_plugin_analysis_icu.rc == 1
+  tags:
+    - software
+    - es
+    - install  
+
+- name: misc pip installs in support of ES
+  pip: name={{ item }}
+  with_items:
+    - elasticsearch
+  tags:
+    - software
+    - es
+    - install    
+
+- name: Reduce swappiness
+  sysctl: name=vm.swappiness value=1 state=present
+  tags:
+    - software
+    - es
+    - config  
+
+- name: restart elasticsearch
+  service:
+    name=elasticsearch
+    enabled=yes
+    state=restarted
+  tags:
+    - software
+    - es
+    - install    

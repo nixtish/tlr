@@ -1,0 +1,15 @@
+---
+- hosts: tlr-command
+  remote_user: root
+  sudo: yes
+  roles:
+    - clojure
+    - metabase
+    - geerlingguy.nginx    
+    - kibana
+  vars:
+      nginx:
+        nginx_user: kibana
+        nginx_group: kibana
+
+

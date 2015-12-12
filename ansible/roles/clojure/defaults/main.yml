@@ -1,0 +1,6 @@
+---
+leiningen_install_directory: ~/bin/
+leiningen_url: https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein
+
+
+

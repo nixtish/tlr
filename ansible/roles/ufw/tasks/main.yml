@@ -1,0 +1,53 @@
+---
+- name: Install ufw
+  action: apt update_cache=yes name=ufw
+  tags:
+    - system
+    - ufw
+    - install 
+
+- name: Enable ufw logging
+  ufw: logging=on
+  tags:
+    - system
+    - ufw
+    - config 
+
+- name: Enable ufw and deny by default
+  ufw: state=reset policy=deny
+  tags:
+    - system
+    - ufw
+    - install
+
+
+- name: Enable ufw and deny by default
+  ufw: state=enabled policy=deny
+  tags:
+    - system
+    - ufw
+    - install 
+
+- name: Open incoming on specified ports
+  ufw: rule=allow proto=tcp port={{ item }}
+  with_items: "{{ ufw_ports }}"
+  tags:
+    - system
+    - ufw
+    - config   
+
+- name: Open incoming from specified ips
+  ufw: rule=allow src={{ item }}
+  with_items: "{{ ufw_src }}"
+  tags:
+    - system
+    - ufw
+    - config  
+
+
+- name: Restart ufw
+  ufw: state=reloaded
+  tags:
+    - system
+    - ufw
+    - install   

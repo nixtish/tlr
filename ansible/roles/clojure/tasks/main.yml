@@ -1,0 +1,24 @@
+---
+# leiningen 
+
+- name: make leiningen directory
+  file: path={{ leiningen_install_directory }} state=directory recurse=yes
+  tags:
+    - software
+    - leiningen
+    - install 
+
+- name: download leiningen 
+  get_url: url={{ leiningen_url }} dest={{ leiningen_install_directory }}/lein
+  tags:
+    - software
+    - leiningen
+    - install 
+
+- name: make leiningen executable 
+  shell: chmod a+x ~/bin/lein
+  tags:
+    - software
+    - leiningen
+    - install     
+

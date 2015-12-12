@@ -1,0 +1,19 @@
+---
+# default theme
+oh_my_zsh_theme: dieter
+# default plugins
+oh_my_zsh_plugins: git
+# use case-sensitive completion
+oh_my_zsh_case_sensitive: false
+# disable bi-weekly auto-update checks
+oh_my_zsh_disable_auto_update: true
+# how often before auto-updates occur? (in days)
+oh_my_zsh_update_days: 13
+# if you want to disable colors in ls
+oh_my_zsh_disable_ls_colors: false
+# if you want to disable autosetting terminal title.
+oh_my_zsh_disable_auto_title: false
+# if you want to disable command autocorrection
+oh_my_zsh_disable_correction: true
+# if you want red dots to be displayed while waiting for completion
+oh_my_zsh_completion_waiting_dots: false

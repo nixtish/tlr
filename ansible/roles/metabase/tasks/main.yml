@@ -1,0 +1,23 @@
+---
+
+- name: make metabase directory
+  file: path={{ metabase_install_directory }} state=directory recurse=yes
+  sudo: yes 
+  tags:
+    - software
+    - metabase
+    - install 
+
+- name: download metabase 
+  get_url: url={{ metabase_url }} dest={{ metabase_install_directory }}/metabase.jar
+  tags:
+    - software
+    - metabase
+    - install 
+
+- name: install metabase 
+  shell: nohup java -jar {{ metabase_install_directory }}/metabase.jar &
+  tags:
+    - software
+    - metabase
+    - install 

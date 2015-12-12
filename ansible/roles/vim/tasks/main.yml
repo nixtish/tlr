@@ -1,0 +1,32 @@
+- name: Install vim 
+  action: apt update_cache=yes name={{ item }}
+  with_items:
+    - vim
+  tags:
+    - system
+    - vim
+    - config
+
+- name: override vimrc
+  template: src=vimrc.j2 dest=~/.vimrc
+  tags:
+    - system
+    - vim
+    - install 
+
+- name: Install vundle
+  git: >
+    repo=https://github.com/gmarik/vundle.git 
+    dest=~/.vim/bundle/vundle
+    update=yes
+  tags:
+    - system
+    - vim
+    - config
+
+- name: install plugins
+  shell: vim +PluginInstall +qall
+  tags:
+    - system
+    - vim
+    - install  

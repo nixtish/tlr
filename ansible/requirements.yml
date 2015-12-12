@@ -1,0 +1,3 @@
+- src: geerlingguy.nginx
+  path: roles
+  version: 1.4.0

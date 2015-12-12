@@ -1,0 +1,16 @@
+---
+- hosts: all
+  remote_user: root
+  sudo: yes
+  roles:
+    - core-utils
+    - ufw
+    - zsh
+    - vim
+    - java8
+  vars:
+    - core_system: 1
+    - core_java: 1
+    - core_python: 1
+
+
