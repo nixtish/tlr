@@ -15,8 +15,10 @@ with open('/Users/peterevanvolgas/Downloads/hourly_16.json', 'r') as infile:
     for line in infile:
         record = json.loads(line)
         city = record['city']
+        city['city'] = city['name']
         data = record['data']
         for i in data:
             i.update(city)
             i['dt_es'] = datetime.utcfromtimestamp(i['dt'])
+            i['location'] = str(i['coord']['lat']) + ',' + str(i['coord']['lon'])
             es.index(index=ES_INDEX, doc_type=ES_DOC_TYPE, body=i, ttl=ES_TTL)
