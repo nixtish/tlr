@@ -1,0 +1,35 @@
+---
+- name: Include os-spesific global variables
+  include_vars: "{{ ansible_os_family }}.yml"
+
+- name: Define mysql_package.
+  set_fact:
+    mysql_package: "{{ mysql_package }}"
+  when: mysql_package is not defined
+
+- name: Define mysql_daemon.
+  set_fact:
+    mysql_daemon: "{{ mysql_daemon }}"
+  when: mysql_daemon is not defined
+
+- name: Define mysql_slow_query_log_file.
+  set_fact:
+    mysql_slow_query_log_file: "{{ mysql_slow_query_log_file }}"
+  when: mysql_slow_query_log_file is not defined
+
+# Installation based on OS 
+
+- include: setup-debian.yml
+  when: ansible_os_family == 'Debian'
+
+# RedHat TODO
+
+- name: Install required mysqldb python modules
+  apt: name=python-mysqldb state=present 
+
+# Configure Percona MySQL
+
+- include: configure.yml
+- include: secure-installation.yml
+- include: database.yml
+- include: user.yml

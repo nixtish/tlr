@@ -1,3 +1,7 @@
 - src: geerlingguy.nginx
   path: roles
   version: 1.4.0
+
+- src: aydintd.percona_mysql
+  path: roles
+  version: 1

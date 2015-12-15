@@ -1,6 +1,7 @@
 import json
 from datetime import datetime
 from elasticsearch import Elasticsearch
+from elasticsearch import helpers
 
 ES_CLUSTER = "elastic.tlr.io"
 ES_PORT = 9200
@@ -11,7 +12,8 @@ ES_TTL = "400d"
 es = Elasticsearch([{"host": ES_CLUSTER, "port": ES_PORT}])
 
 
-with open('/Users/peterevanvolgas/Downloads/hourly_16.json', 'r') as infile:
+# Change this to bulk update later
+with open('hourly_16.json', 'r') as infile:
     for line in infile:
         record = json.loads(line)
         city = record['city']
