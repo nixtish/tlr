@@ -142,6 +142,23 @@
     - es
     - install  
 
+- name: check HQ plugin
+  shell: /usr/share/elasticsearch/bin/plugin list|grep hq
+  ignore_errors: yes
+  register: elasticsearch_plugin_analysis_hq
+  tags:
+    - software
+    - es
+    - install
+
+- name: install HQ plugin
+  command: /usr/share/elasticsearch/bin/plugin install royrusso/elasticsearch-HQ
+  when: elasticsearch_plugin_analysis_hq.rc == 1
+  tags:
+    - software
+    - es
+    - install     
+
 - name: misc pip installs in support of ES
   pip: name={{ item }}
   with_items:

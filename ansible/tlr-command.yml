@@ -1,15 +1,27 @@
 ---
 - hosts: tlr-command
   remote_user: root
-  sudo: yes
   roles:
     - clojure
     - metabase
     - geerlingguy.nginx    
     - kibana
+    - logstash
   vars:
       nginx:
         nginx_user: kibana
         nginx_group: kibana
+      logstash_inputs: |
+        beats {
+            port => "5043"
+        }
 
+      logstash_filters: |
+        grok {
+            match => { "message" => "%{COMBINEDAPACHELOG}"}
+        }
 
+      logstash_outputs: |
+        elasticsearch {
+            proxy => "http://elastic.tlr.io:9200"
+        }

@@ -1,6 +1,0 @@
----
-- hosts: tlr-mysql
-  remote_user: root 
-  roles:
-    - aydintd.percona_mysql
-

@@ -1,0 +1,33 @@
+- name: logstash check
+  ignore_errors: yes
+  register: logstash_check
+  command: dpkg-query -l 'logstash'
+
+- name: install logstash apt keys
+  apt_key:
+    url: https://packages.elastic.co/GPG-KEY-elasticsearch
+  when: logstash_check.stderr.find('no packages found') != -1
+
+- name: install logstash apt repos
+  apt_repository:
+    repo: "{{ logstash_debian_repo }}"
+  when: logstash_check.stderr.find('no packages found') != -1
+
+- name: apt-get update
+  apt: update_cache=yes
+  when: logstash_check.stderr.find('no packages found') != -1
+
+- name: install logstash
+  apt: pkg=logstash update_cache=yes state=present
+
+- name: copy logstash input config
+  template: src=input.conf.j2 dest={{ logstash_conf_dir }}/input.conf
+
+- name: Copy logstash filters config
+  template: src=filters.conf.j2 dest={{ logstash_conf_dir }}/filters.conf
+
+- name: Copy logstash output config
+  template: src=output.conf.j2 dest={{ logstash_conf_dir }}/output.conf
+
+- name: restart logstash
+  service: name=logstash state=restarted enabled=yes

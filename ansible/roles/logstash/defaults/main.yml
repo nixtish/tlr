@@ -1,0 +1,5 @@
+---
+logstash_debian_repo: "deb http://packages.elastic.co/logstash/2.0/debian stable main"
+logstash_conf_dir: "/etc/logstash/conf.d"
+
+

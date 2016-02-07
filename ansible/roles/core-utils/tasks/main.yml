@@ -9,6 +9,7 @@
     - tar
     - unzip 
     - software-properties-common
+    - tmux
   when: "{{ core_system }} == 1"
   tags:
     - system
@@ -64,5 +65,3 @@
     - java
     - core-utils
     - config
-
-

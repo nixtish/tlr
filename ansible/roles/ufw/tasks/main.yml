@@ -20,7 +20,6 @@
     - ufw
     - install
 
-
 - name: Enable ufw and deny by default
   ufw: state=enabled policy=deny
   tags:
