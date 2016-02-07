@@ -54,35 +54,35 @@ source $ZSH/oh-my-zsh.sh
 # User configuration
 
 export PATH=$HOME/bin:/usr/local/bin:$PATH
-# export MANPATH="/usr/local/man:$MANPATH"
 
-# # Preferred editor for local and remote sessions
-# if [[ -n $SSH_CONNECTION ]]; then
-#   export EDITOR='vim'
-# else
-#   export EDITOR='mvim'
-# fi
+# Preferred editor for local and remote sessions
+if [[ -n $SSH_CONNECTION ]]; then
+  export EDITOR='vim'
+  else
+  export EDITOR='mvim'
+fi
 
-# Compilation flags
-# export ARCHFLAGS="-arch x86_64"
-
-# ssh
-# export SSH_KEY_PATH="~/.ssh/dsa_id"
-
-alias vpython="virtualenv venv"
-alias vpythonup="source venv/bin/activate"
-alias vpythondown="deactivate"
-alias mosdef="workon defaultenv"
+#Vim and Zsh
 alias wtfvim="vim ~/.vimrc"
-alias aka="cat ~/.zshrc | grep alias"
 alias wtfzsh="vim ~/.zshrc"
+
 alias doitagain="source ~/.zshrc"
+alias aka="cat ~/.zshrc | grep alias"
+
 alias catssh="cat ~/.ssh/config"
 alias editssh="vim ~/.ssh/config"
+
+
+# Git
 alias gitrecent="git show-branch -r --list"
+
+# Tmux
 alias ta='tmux attach -t'
 alias td='tmux detach -s'
 alias ts='tmux new-session -s'
 alias tl='tmux list-sessions'
 alias tksv='tmux kill-server'
 alias tkss='tmux kill-session -t'
+
+# Network
+alias whereami="curl ifconfig.me/ip"

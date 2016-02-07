@@ -35,14 +35,29 @@
     - ufw
     - config   
 
-- name: Open incoming from specified ips
+- name: Open incoming from external ips
+  ufw: rule=allow src="{{ hostvars[item]['ansible_eth0']['ipv4']['address'] }}"
+  with_items: groups['tlr-ufw-allow']
+  tags:
+    - system
+    - ufw
+    - config  
+
+- name: Open incoming from internal ips
+  ufw: rule=allow src="{{ hostvars[item]['ansible_eth1']['ipv4']['address'] }}"
+  with_items: groups['tlr-ufw-allow']
+  tags:
+    - system
+    - ufw
+    - config  
+
+- name: Open incoming from home address
   ufw: rule=allow src={{ item }}
   with_items: "{{ ufw_src }}"
   tags:
     - system
     - ufw
     - config  
-
 
 - name: Restart ufw
   ufw: state=reloaded
