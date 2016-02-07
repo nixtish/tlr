@@ -1,0 +1,66 @@
+---
+- name: elasticsearch check
+  ignore_errors: yes
+  register: beats_check
+  command: dpkg-query -l 'filebeat'
+  tags:
+    - software
+    - es-beats
+    - install
+
+- name: install elasticsearch apt keys for beats
+  apt_key:
+    url: https://packages.elastic.co/GPG-KEY-elasticsearch
+  when: beats_check.stderr.find('no packages found') != -1
+  tags:
+    - software
+    - es-beats
+    - install  
+
+- name: install elasticsearch beats apt repos
+  apt_repository:
+    repo: "{{ beats_debian_repo }}"
+  when: beats_check.stderr.find('no packages found') != -1
+  tags:
+    - software
+    - es-beats
+    - install 
+
+- name: Install beats packages 
+  action: apt update_cache=yes name={{ item }}
+  with_items:
+    - filebeat
+    - packetbeat
+    - topbeat
+  tags:
+    - software
+    - es-beats
+    - install  
+
+- name: override topbeat.yml file
+  template: src=topbeat.yml.j2 dest={{ topbeat_directory }}/topbeat.yml
+  tags:
+    - software
+    - es-beats
+    - config  
+
+- name: override packetbeat.yml file
+  template: src=packetbeat.yml.j2 dest={{ packetbeat_directory }}/packetbeat.yml
+  tags:
+    - software
+    - es-beats
+    - config    
+
+- name: turn on top beat
+  shell: "sudo /etc/init.d/topbeat start"
+  tags:
+    - software
+    - es-beats
+    - config 
+
+- name: turn on packet beat
+  shell: "sudo /etc/init.d/packetbeat start"
+  tags:
+    - software
+    - es-beats
+    - config         

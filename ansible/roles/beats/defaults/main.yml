@@ -1,0 +1,4 @@
+beats_debian_repo: "deb https://packages.elastic.co/beats/apt stable main"
+topbeat_directory: "/etc/topbeat"
+filebeat_directory: "/etc/filebeat"
+packetbeat_directory: "/etc/packetbeat"
