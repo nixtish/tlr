@@ -145,7 +145,7 @@
 - name: check HQ plugin
   shell: /usr/share/elasticsearch/bin/plugin list|grep hq
   ignore_errors: yes
-  register: elasticsearch_plugin_analysis_hq
+  register: elasticsearch_plugin_hq
   tags:
     - software
     - es
@@ -153,11 +153,29 @@
 
 - name: install HQ plugin
   command: /usr/share/elasticsearch/bin/plugin install royrusso/elasticsearch-HQ
-  when: elasticsearch_plugin_analysis_hq.rc == 1
+  when: elasticsearch_plugin_hq.rc == 1
   tags:
     - software
     - es
-    - install     
+    - install 
+
+- name: check Kopf plugin
+  shell: /usr/share/elasticsearch/bin/plugin list|grep kopf
+  ignore_errors: yes
+  register: elasticsearch_plugin_kopf
+  tags:
+    - software
+    - es
+    - install
+
+- name: install Kopf plugin
+  command: "/usr/share/elasticsearch/bin/plugin install lmenezes/elasticsearch-kopf/2.0|v2.1.1"
+  when: elasticsearch_plugin_kopf.rc == 1
+  tags:
+    - software
+    - es
+    - install
+
 
 - name: misc pip installs in support of ES
   pip: name={{ item }}
