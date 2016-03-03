@@ -1,4 +1,5 @@
 ---
+elasticsearch_version: 2.2.0
 elasticsearch_user: "elasticsearch"
 elasticsearch_group: "elasticsearch"
 elasticsearch_cluster_name: "tlr"
@@ -13,4 +14,5 @@ elasticsearch_tmp_directory: "/mnt/elasticsearch/tmp"
 elasticsearch_log_directory: "/var/log/elasticsearch"
 elasticsearch_plugin_directory: "/usr/share/elasticsearch/plugins"
 elasticsearch_debian_repo: "deb http://packages.elastic.co/elasticsearch/2.x/debian stable main"
-es_bulk_queue_size: 1000
+elasticsearch_node_master: "true"
+elasticsearch_node_data: "true"

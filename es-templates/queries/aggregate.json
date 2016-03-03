@@ -1,0 +1,48 @@
+{
+  "size": 0,
+  "query": {
+    "bool": {
+      "must": [
+      ],
+      "should": [
+      ],
+      "must_not": [
+      ],
+      "filter": {
+        "bool": {
+          "must": [
+            { "term":  { "post_author.login": "sldb" }},
+            { "range": { "post_date_gmt": { "gte": "2011-01-01 00:00:00" }}},
+            { "range": { "post_date_gmt": { "lte": "2016-05-01 00:00:00" }}}                
+          ],
+          "should": [
+            { "term":  { "post_status": "publish" }},
+            { "term":  { "post_status": "draft" }}
+          ],
+          "must_not": [
+            { "term":  { "post_type": "page" }}
+          ]
+        }
+      }
+    }
+  },
+  "aggs": {
+    "Category": {
+      "terms": {
+        "field": "post_name.raw",
+        "size": 20,
+        "order": {
+          "comments.sum": "desc"
+        }
+      },
+      "aggs": {
+        "comments": {
+          "extended_stats": {
+            "field": "comment_count"
+          }
+        }
+      }
+    }
+  }, 
+"stats" : ["aggregate"]
+}

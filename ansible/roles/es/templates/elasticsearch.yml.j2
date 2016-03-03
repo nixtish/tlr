@@ -18,11 +18,11 @@ node.name: {{ inventory_hostname }}
 #
 # Allow this node to be eligible as a master node (enabled by default):
 #
-node.master: true
+node.master: {{ elasticsearch_node_master }}
 #
 # Allow this node to store data (enabled by default):
 #
-node.data: true
+node.data: {{ elasticsearch_node_data }}
 
 
 #################################### Index ####################################
@@ -244,7 +244,7 @@ http.cors.allow-origin: "{{ elasticsearch_cors_allow_origin }}"
 
 
 discovery.zen.ping.multicast.enabled: false
-discovery.zen.ping.unicast.hosts: ["es-1.tlr.io", "es-2.tlr.io"]
+discovery.zen.ping.unicast.hosts: [{{ elasticsearch_cluster_domain }}]
 
 
 ################################## Slow Log ##################################
@@ -287,5 +287,13 @@ index.indexing.slowlog.threshold.index.trace: 500ms
 ################################## USER SPECIFIC ################################
 action.disable_delete_all_indices: true
 action.destructive_requires_name: true
+
 script.groovy.sandbox.enabled: false
-threadpool.bulk.queue_size: {{ es_bulk_queue_size }}
+
+repositories.url.allowed_urls: ["http://download.elasticsearch.org/*", "http://*.tlr.io/*?*#*"]
+
+# Bump for SSDs
+indices.store.throttle.max_bytes_per_sec : "200mb"
+
+# Don't need real time results 
+index.refresh_interval

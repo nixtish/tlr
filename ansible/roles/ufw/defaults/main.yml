@@ -1,3 +1,4 @@
 ---
 ufw_src: [71.56.121.222/32]
-ufw_ports: [22]
+ufw_open_ports: [22]
+

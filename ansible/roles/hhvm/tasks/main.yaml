@@ -1,0 +1,115 @@
+---
+
+- name: Install system packages 
+  action: apt update_cache=yes name={{ item }}
+  with_items:
+    - php5-tidy
+    - yui-compressor
+  when: "{{ core_system }} == 1"
+  tags:
+    - system
+    - core-utils
+    - config 
+
+
+
+- name: Check if nginx is installed
+  command: dpkg-query -l nginx
+  ignore_errors: yes
+  register: nginx_check
+  tags:
+    - software
+    - HHVM
+    - install   
+
+- name: install nginx
+  apt: name=nginx state=present
+  when: nginx_check.stderr.find('no packages found') != -1
+  tags:
+    - software
+    - HHVM
+    - install 
+
+- name: Check if HHVM is installed
+  command: dpkg-query -l hhvm
+  ignore_errors: yes
+  register: hhvm_check
+  tags:
+    - software
+    - HHVM
+    - install   
+
+- name: Add HHVM Apt Key 
+  apt_key: keyserver=keyserver.ubuntu.com id=0x5a16e7281be7a449
+  when: hhvm_check.stderr.find('no packages found') != -1  
+  tags:
+    - software
+    - HHVM
+    - install 
+
+- name: add HHVM repo
+  apt_repository: repo='deb http://dl.hhvm.com/ubuntu trusty main' state=present
+  when: hhvm_check.stderr.find('no packages found') != -1
+  tags:
+    - software
+    - HHVM
+    - install 
+
+- name: install HHVM
+  apt: name=hhvm state=present
+  when: hhvm_check.stderr.find('no packages found') != -1
+  tags:
+    - software
+    - HHVM
+    - install 
+
+- name: run HHVM on startup
+  shell: "update-rc.d hhvm defaults"
+  when: hhvm_check.stderr.find('no packages found') != -1
+  tags:
+    - software
+    - HHVM
+    - install 
+
+- name: Autoconfig HHVM 
+  shell: "/usr/share/hhvm/install_fastcgi.sh"
+  when: hhvm_check.stderr.find('no packages found') != -1
+  tags:
+    - software
+    - HHVM
+    - install
+
+- name: override /etc/hhvm/server.ini
+  template: src=server.ini.j2 dest=/etc/hhvm/server.ini
+  tags:
+    - software
+    - HHVM
+    - install   
+
+- name: override  /etc/nginx/hhvm.conf
+  template: src=hhvm.conf.j2 dest=/etc/nginx/hhvm.conf
+  tags:
+    - software
+    - HHVM
+    - install   
+
+- name: override /etc/hhvm/php.ini
+  template: src=php.ini.j2 dest=/etc/hhvm/php.ini
+  tags:
+    - software
+    - HHVM
+    - install 
+
+- name: restart HHVM
+  service: name=hhvm state=restarted
+  tags:
+    - software
+    - HHVM
+    - install 
+
+- name: restart nginx
+  service: name=nginx state=restarted
+  tags:
+    - software
+    - wordpress
+    - install 

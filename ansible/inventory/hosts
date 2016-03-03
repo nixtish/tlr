@@ -9,17 +9,10 @@ command-1.tlr.io
 es-1.tlr.io
 es-2.tlr.io
 
-[tlr-openvpn]
-vpn-1.tlr.io
-
-[tlr-ufw-allow]
-mysql-1.tlr.io
-mysql-2.tlr.io
-command-1.tlr.io
-es-1.tlr.io
-es-2.tlr.io
-vpn-1.tlr.io
-stoploggingtoyourdb.com
-
 [sldb]
 stoploggingtoyourdb.com
+
+[wp]
+evan.is
+misfitideas.com
+nancythanki.com

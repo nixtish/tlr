@@ -1,5 +1,5 @@
 ---
-- hosts: tlr-ufw-allow
+- hosts: all
   remote_user: root
   roles:
     - beats

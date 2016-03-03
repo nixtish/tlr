@@ -52,15 +52,18 @@
     - config    
 
 - name: turn on top beat
-  shell: "sudo /etc/init.d/topbeat start"
+  shell: "sudo /etc/init.d/topbeat restart"
   tags:
     - software
     - es-beats
     - config 
 
 - name: turn on packet beat
-  shell: "sudo /etc/init.d/packetbeat start"
+  shell: "sudo /etc/init.d/packetbeat restart"
   tags:
     - software
     - es-beats
     - config         
+
+
+

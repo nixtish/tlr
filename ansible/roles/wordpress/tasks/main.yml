@@ -1,33 +1,155 @@
 ---
-- name: Download WordPress
-  get_url: url=http://wordpress.org/wordpress-{{ wp_version }}.tar.gz dest=/srv/wordpress-{{ wp_version }}.tar.gz
-           sha256sum="{{ wp_sha256sum }}"
 
-- name: Extract archive
-  command: chdir=/srv/ /bin/tar xvf wordpress-{{ wp_version }}.tar.gz creates=/srv/wordpress
+- name: make WP Content directory
+  file: 
+    path: /var/www/html/wordpress/wp-content/
+    state: directory 
+    owner: www-data 
+    group: www-data 
+    recurse: yes
+  when: "{{ wc_new }} == 1"      
+  tags:
+    - software
+    - wordpress
+    - install 
 
-- name: Add group "wordpress"
-  group: name=wordpress
-
-- name: Add user "wordpress"
-  user: name=wordpress group=wordpress home=/srv/wordpress/
-
-- name: Fetch random salts for WordPress config
-  local_action: command curl https://api.wordpress.org/secret-key/1.1/salt/
-  register: "wp_salt"
-  sudo: no
-
-- name: Create WordPress database
-  mysql_db: name={{ wp_db_name }} state=present
-
-- name: Create WordPress database user
-  mysql_user: name={{ wp_db_user }} password={{ wp_db_password }} priv={{ wp_db_name }}.*:ALL host='localhost' state=present
-
+- name: Download and Extract WordPress
+  unarchive: 
+    src: http://wordpress.org/latest.tar.gz
+    dest: /var/www/html/
+    copy: no
+  when: "{{ wc_new }} == 1"      
+  tags:
+    - software
+    - wordpress
+    - install  
+  
 - name: Copy WordPress config file
-  template: src=wp-config.php dest=/srv/wordpress/
+  template: 
+    src: wp-config.php.j2
+    dest: /var/www/html/wordpress/wp-config.php
+  when: "{{ wc_new }} == 1"      
+  tags:
+    - software
+    - wordpress
+    - install  
+
+- name: Copy DB config file
+  template: 
+    src: db-config.php.j2
+    dest: /var/www/html/wordpress/db-config.php
+  when: "{{ wc_new }} == 1"  
+  tags:
+    - software
+    - wordpress
+    - install  
+
+- name: Copy DB file
+  template: 
+    src: db.php.j2
+    dest: /var/www/html/wordpress/db.php
+  when: "{{ wc_new }} == 1"    
+  tags:
+    - software
+    - wordpress
+    - install  
+
+- name: Copy WordPress Nginx file
+  template: 
+    src: wordpress.j2
+    dest: /etc/nginx/sites-available/wordpress
+  when: "{{ wc_new }} == 1"
+  tags:
+    - software
+    - wordpress
+    - install  
+
+- name: Symlink WordPress nginx available as enabled
+  file: 
+    src: /etc/nginx/sites-available/wordpress
+    dest: /etc/nginx/sites-enabled/wordpress 
+    state: link
+  when: "{{ wc_new }} == 1"    
+  tags:
+    - software
+    - wordpress
+    - install 
+
+- name: Remove default nginx as enabled
+  file: 
+    path: /etc/nginx/sites-enabled/default
+    state: absent
+  when: "{{ wc_new }} == 1"    
+  tags:
+    - software
+    - wordpress
+    - install 
 
 - name: Change ownership of WordPress installation
-  file: path=/srv/wordpress/ owner=wordpress group=wordpress state=directory recurse=yes
+  file: 
+    path: /var/www/html/wordpress/
+    owner: www-data 
+    group: www-data 
+    state: directory 
+    recurse: yes
+    mode: 0755 
+  tags:
+    - software
+    - wordpress
+    - install      
 
-- name: Start php-fpm Service
-  service: name=php-fpm state=started enabled=yes
+- name: restart nginx
+  service: name=nginx state=restarted
+  tags:
+    - software
+    - wordpress
+    - install 
+
+
+- name: make WP Cli directory
+  file: 
+    path: /usr/local/bin/wp/
+    state: directory 
+    owner: www-data 
+    group: www-data 
+    recurse: yes
+  tags:
+    - software
+    - wordpress
+    - install 
+
+
+- name: Get wp-cli file
+  get_url: 
+    url: https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+    dest: /usr/local/bin/wp/wp-cli.phar
+    owner: www-data 
+    group: www-data    
+    mode: u+rwx 
+  tags:
+    - software
+    - wordpress
+    - install 
+
+- name: Get wp-cli file
+  get_url: 
+    url: https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+    dest: /usr/local/bin/wp
+    owner: www-data 
+    group: www-data    
+    mode: u+rwx 
+  tags:
+    - software
+    - wordpress
+    - install 
+
+- name: Symlink WordPress folder
+  file: 
+    src: /var/www/html/wordpress
+    dest: /wp
+    state: link
+  when: "{{ wc_new }} == 1"    
+  tags:
+    - software
+    - wordpress
+    - install 

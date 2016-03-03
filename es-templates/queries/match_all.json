@@ -1,0 +1,15 @@
+{
+  "from": 0,
+  "size": 10,
+  "sort": [
+      {
+          "post_date_gmt": {
+              "order": "desc"
+          }
+      }
+  ],
+  "query": {
+    "match_all": {  
+    }
+  }
+}

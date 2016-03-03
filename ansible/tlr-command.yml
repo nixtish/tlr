@@ -3,11 +3,10 @@
   remote_user: root
   roles:
     - clojure
-    - metabase
-    - geerlingguy.nginx    
+    - geerlingguy.nginx
+    - es    
     - kibana
   vars:
-      nginx:
-        nginx_user: kibana
-        nginx_group: kibana
-
+    nginx:
+      nginx_user: kibana
+      nginx_group: kibana

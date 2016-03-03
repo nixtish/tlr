@@ -11,7 +11,9 @@
     - unzip 
     - software-properties-common
     - tmux
-    - openvpn    
+    - bc
+    - sysstat
+    - postfix
   when: "{{ core_system }} == 1"
   tags:
     - system
@@ -36,14 +38,11 @@
   with_items:
     - requests
     - Flask
-    - pandas
-    - numpy
-    - ipython 
     - virtualenv    
     - pep8
     - autopep8
     - tldextract
-    - ijson
+    - glances
   when: "{{ core_python }} == 1"
   tags:
     - python
