@@ -297,3 +297,19 @@ indices.store.throttle.max_bytes_per_sec : "200mb"
 
 # Don't need real time results 
 index.refresh_interval=30s
+
+# eg https://www.elastic.co/blog/hot-warm-architecture
+node.box_type: hot
+
+# https://www.elastic.co/guide/en/elasticsearch/reference/current/query-cache.html
+indices.queries.cache.size: 15%
+# https://www.elastic.co/guide/en/elasticsearch/reference/current/indexing-buffer.html
+indices.memory.index_buffer_size: 5%
+
+
+# The smaller your shards are, the higher you should set this value.
+# Since marvel, logstash, etc split data into daily indices, you may have
+# a larger number of smaller shards.
+cluster.routing.allocation.node_concurrent_recoveries: 5
+
+indices.recovery.max_bytes_per_sec: 50mb
