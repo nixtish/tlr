@@ -1,0 +1,10 @@
+click==6.3
+elasticsearch==2.3.0
+elasticsearch-curator==3.5.0
+Flask==0.10.1
+itsdangerous==0.24
+Jinja2==2.8
+MarkupSafe==0.23
+requests==2.9.1
+urllib3==1.14
+Werkzeug==0.11.4
