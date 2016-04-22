@@ -13,7 +13,6 @@
     - tmux
     - bc
     - sysstat
-    - postfix
   when: "{{ core_system }} == 1"
   tags:
     - system
